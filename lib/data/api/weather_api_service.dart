@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:my_weather_app/data/models/Current_weather_model.dart';
+import 'package:my_weather_app/data/models/current_weather_model.dart';
 
 import 'api_constants.dart';
 import 'package:http/http.dart' as http;

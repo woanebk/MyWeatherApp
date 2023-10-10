@@ -19,7 +19,7 @@ class _JumpingLocationIconState extends State<JumpingLocationIcon>
       duration: const Duration(milliseconds: 500),
     )..repeat(reverse: true);
 
-    _animation = Tween<double>(begin: 0, end: 20).animate(
+    _animation = Tween<double>(begin: 0, end: 2).animate(
       CurvedAnimation(
         parent: _controller,
         curve: Curves.easeInOut,
@@ -41,8 +41,9 @@ class _JumpingLocationIconState extends State<JumpingLocationIcon>
         return Transform.translate(
           offset: Offset(0, -_animation.value),
           child: Icon(
-            Icons.location_on_outlined,
-            size: 20,
+            Icons.location_on_sharp,
+            size: 28,
+            color: Color(0xff00008b),
           ),
         );
       },
