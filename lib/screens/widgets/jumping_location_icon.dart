@@ -43,7 +43,7 @@ class _JumpingLocationIconState extends State<JumpingLocationIcon>
           child: Icon(
             Icons.location_on_sharp,
             size: 28,
-            color: Color(0xff00008b),
+            color: Colors.white,
           ),
         );
       },

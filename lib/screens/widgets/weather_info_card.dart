@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:my_weather_app/data/models/weather_model.dart';
+import 'package:my_weather_app/utils/lottie_animations.dart';
 
 class WeatherInfoCard extends StatelessWidget {
-  const WeatherInfoCard({super.key});
+  const WeatherInfoCard({super.key, this.weather});
+  final WeatherModel? weather;
 
   @override
   Widget build(BuildContext context) {
@@ -13,17 +16,17 @@ class WeatherInfoCard extends StatelessWidget {
             Lottie.asset(animation, width: 60, height: 60),
             Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
                   fontWeight: FontWeight.w600),
             ),
-            SizedBox(
+            const SizedBox(
               height: 4,
             ),
             Text(
               value,
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
                   fontWeight: FontWeight.w600),
@@ -40,10 +43,22 @@ class WeatherInfoCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildItem('Humidity', '12%', 'assets/animations/humid.json'),
-          _buildItem('Wind mph', '12%', 'assets/animations/white_wind.json'),
-          _buildItem('Cloud', '12%', 'assets/animations/cloud.json'),
-          _buildItem('UV', '12%', 'assets/animations/uv.json')
+          _buildItem(
+              'Humidity',
+              '${weather?.current?.humidity?.toStringAsFixed(0) ?? '...'}%',
+              LottieAnimations.humid),
+          _buildItem(
+              'Wind speed',
+              '${weather?.current?.humidity?.toStringAsFixed(0) ?? '...'} mph',
+              LottieAnimations.whiteWind),
+          _buildItem(
+              'Cloud',
+              '${weather?.current?.cloud?.toStringAsFixed(0) ?? '...'}%',
+              LottieAnimations.cloud),
+          _buildItem(
+              'UV',
+              '${weather?.current?.uv?.toStringAsFixed(0) ?? '...'}%',
+              LottieAnimations.uv)
         ],
       ),
     );

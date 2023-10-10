@@ -5,4 +5,6 @@ class ApiConstants {
 
 class WeatherApiUrl {
   static String getCurrentWeather = '/current.json';
+  static String search = '/search.json';
+  static String forecast = '/forecast.json';
 }

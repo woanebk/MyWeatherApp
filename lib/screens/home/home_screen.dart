@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:my_weather_app/data/api/weather_api_service.dart';
-import 'package:my_weather_app/data/models/current_weather_model.dart';
+import 'package:my_weather_app/data/models/test/hour_model.dart';
+import 'package:my_weather_app/data/models/weather_model.dart';
 import 'package:my_weather_app/screens/home/widgets/widgets.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:my_weather_app/screens/search/search_screen.dart';
 import 'package:my_weather_app/screens/widgets/widgets.dart';
-import 'package:my_weather_app/utils/location_service.dart';
+import 'package:my_weather_app/utils/lottie_animations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,15 +20,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Controls:
   bool _isLoading = false;
+  bool _showError = false;
 
   // Data:
-  CurrentWeatherModel? _myPositionWeather;
+  WeatherModel? _myPositionWeather;
+  List<HourModel> _weatherForecast = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _fetchCurrentWeather();
   }
 
   @override
@@ -53,6 +55,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         LocationInput(
                           city: _myPositionWeather?.location?.name,
                           country: _myPositionWeather?.location?.country,
+                          onTap: () async {
+                            var res = await Navigator.of(context)
+                                .push(MaterialPageRoute(
+                              builder: (context) => SearchScreen(),
+                            ));
+                            if (res != null) {
+                              _fetchWeather(search: res);
+                              _fetchForecast(search: res);
+                            }
+                          },
                         ),
                         Column(
                           children: [
@@ -60,36 +72,36 @@ class _HomeScreenState extends State<HomeScreen> {
                                 margin: EdgeInsets.only(bottom: 50),
                                 child: Column(
                                   children: [
+                                    Visibility(
+                                        visible: _myPositionWeather
+                                                ?.current?.tempC !=
+                                            null,
+                                        child: Text(
+                                          '${_myPositionWeather?.current?.tempC ?? ''}°C',
+                                          style: const TextStyle(
+                                              fontSize: 70,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w700),
+                                        )),
                                     Text(
-                                      '20°C',
-                                      style: TextStyle(
-                                          fontSize: 70,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                    Text(
-                                      'Partly Clpouds',
-                                      style: TextStyle(
+                                      _myPositionWeather
+                                              ?.current?.condition?.text ??
+                                          '',
+                                      style: const TextStyle(
                                           fontSize: 20,
                                           color: Colors.white,
                                           fontWeight: FontWeight.w500),
                                     )
                                   ],
                                 )),
-                            WeatherInfoCard()
+                            WeatherInfoCard(
+                              weather: _myPositionWeather,
+                            )
                           ],
                         )
                       ],
                     )),
-                Flexible(
-                    flex: 1,
-                    child: Container(
-                      padding: const EdgeInsets.only(
-                          top: 40, left: 32, right: 32, bottom: 16),
-                      child: Row(
-                        children: [],
-                      ),
-                    ))
+                Flexible(flex: 1, child: _buildForecastBlock())
               ],
             ),
           ),
@@ -114,24 +126,113 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: Transform.translate(
             offset: const Offset(0, -100),
-            child: Lottie.asset('assets/animations/main_idle.json',
+            child: Lottie.asset(LottieAnimations.mainIdle,
                 height: 200, width: 200)),
       );
 
-  void _fetchCurrentWeather() async {
+  Widget _buildForecastBlock() {
+    if (_weatherForecast.isEmpty) return Container();
+    return Container(
+      padding: const EdgeInsets.only(top: 40, left: 32, right: 32, bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Today forecast',
+            textAlign: TextAlign.start,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: _weatherForecast.map((e) {
+              var index = _weatherForecast.indexOf(e);
+              if (index == 4 || index == 10 || index == 16 || index == 22) {
+                return Container(
+                  child: Column(
+                    children: [
+                      Image.network('https:${e.condition?.icon ?? ''}'),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      Text(
+                        (e.time ?? '').split(' ').last,
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      Text(
+                        e.tempC.toString() + ' °C',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+                );
+              }
+              return Container();
+            }).toList(),
+          )
+        ],
+      ),
+    );
+  }
+
+  void _fetchWeather({required String search}) async {
     try {
       setState(() {
         _isLoading = true;
       });
-      Position position = await LocationService.determinrPostion();
-      var res = await _weatherApiService.getCurrentWeather(
-          search: '${position.latitude},${position.longitude}');
+
+      var res = await _weatherApiService.getCurrentWeather(search: search);
       if (res != null) {
         setState(() {
           _myPositionWeather = res;
         });
       }
     } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return ErrorOverlay(
+            text: e.toString(),
+          );
+        },
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _fetchForecast({required String search}) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      var res = await _weatherApiService.getForecast(search: search);
+      if (res?.forecast?.forecastday != null &&
+          res!.forecast!.forecastday!.isNotEmpty) {
+        setState(() {
+          _weatherForecast = res.forecast!.forecastday!.first.hour ?? [];
+        });
+      } else {
+        throw 'No forecast available';
+      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return ErrorOverlay(
+            text: e.toString(),
+          );
+        },
+      );
     } finally {
       setState(() {
         _isLoading = false;

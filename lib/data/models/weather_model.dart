@@ -1,20 +1,22 @@
+import 'package:my_weather_app/data/models/test/forecast_model.dart';
+
 import 'location.dart';
 import 'current.dart';
 
-class CurrentWeatherModel {
-  CurrentWeatherModel({
-    this.location,
-    this.current,
-  });
+class WeatherModel {
+  WeatherModel({this.location, this.current, this.forecast});
 
-  CurrentWeatherModel.fromJson(dynamic json) {
+  WeatherModel.fromJson(dynamic json) {
     location =
         json['location'] != null ? Location.fromJson(json['location']) : null;
     current =
         json['current'] != null ? Current.fromJson(json['current']) : null;
+    forecast =
+        json['forecast'] != null ? Forecast.fromJson(json['forecast']) : null;
   }
   Location? location;
   Current? current;
+  Forecast? forecast;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -23,6 +25,10 @@ class CurrentWeatherModel {
     }
     if (current != null) {
       map['current'] = current?.toJson();
+    }
+
+    if (forecast != null) {
+      map['forecast'] = forecast?.toJson();
     }
     return map;
   }
