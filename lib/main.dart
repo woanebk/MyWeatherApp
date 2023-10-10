@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
     ));
 
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Weather App',
         theme: ThemeData(
           primarySwatch: Colors.blue,

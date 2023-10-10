@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:my_weather_app/data/api/weather_api_service.dart';
-import 'package:my_weather_app/data/models/test/hour_model.dart';
+import 'package:my_weather_app/data/models/hour_model.dart';
 import 'package:my_weather_app/data/models/weather_model.dart';
 import 'package:my_weather_app/screens/home/widgets/widgets.dart';
 import 'package:my_weather_app/screens/search/search_screen.dart';
@@ -20,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Controls:
   bool _isLoading = false;
-  bool _showError = false;
 
   // Data:
   WeatherModel? _myPositionWeather;
@@ -58,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () async {
                             var res = await Navigator.of(context)
                                 .push(MaterialPageRoute(
-                              builder: (context) => SearchScreen(),
+                              builder: (context) => const SearchScreen(),
                             ));
                             if (res != null) {
                               _fetchWeather(search: res);
@@ -69,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Column(
                           children: [
                             Container(
-                                margin: EdgeInsets.only(bottom: 50),
+                                margin: const EdgeInsets.only(bottom: 50),
                                 child: Column(
                                   children: [
                                     Visibility(
@@ -105,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          Visibility(visible: _isLoading, child: LoadingOverlay())
+          Visibility(visible: _isLoading, child: const LoadingOverlay())
         ],
       ),
     );
@@ -148,29 +147,27 @@ class _HomeScreenState extends State<HomeScreen> {
             children: _weatherForecast.map((e) {
               var index = _weatherForecast.indexOf(e);
               if (index == 4 || index == 10 || index == 16 || index == 22) {
-                return Container(
-                  child: Column(
-                    children: [
-                      Image.network('https:${e.condition?.icon ?? ''}'),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        (e.time ?? '').split(' ').last,
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        e.tempC.toString() + ' °C',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
+                return Column(
+                  children: [
+                    Image.network('https:${e.condition?.icon ?? ''}'),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      (e.time ?? '').split(' ').last,
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      '${e.tempC} °C',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
                 );
               }
               return Container();

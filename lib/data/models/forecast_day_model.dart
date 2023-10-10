@@ -1,4 +1,4 @@
-import 'package:my_weather_app/data/models/test/hour_model.dart';
+import 'package:my_weather_app/data/models/hour_model.dart';
 
 import 'day_model.dart';
 

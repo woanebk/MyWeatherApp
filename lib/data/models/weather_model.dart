@@ -1,4 +1,4 @@
-import 'package:my_weather_app/data/models/test/forecast_model.dart';
+import 'package:my_weather_app/data/models/forecast_model.dart';
 
 import 'location.dart';
 import 'current.dart';

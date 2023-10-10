@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_weather_app/data/api/weather_api_service.dart';
 import 'package:my_weather_app/data/models/autocorrect_model.dart';
+import 'package:my_weather_app/screens/home/widgets/widgets.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -14,7 +15,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   List<AutocorrectModel> _suggestions = [];
 
-  var _searchController = TextEditingController(text: '');
+  final _searchController = TextEditingController(text: '');
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,7 @@ class _SearchScreenState extends State<SearchScreen> {
             _buildBackground(),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.only(top: 90, left: 16, right: 16),
+              padding: const EdgeInsets.only(top: 90, left: 16, right: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -78,46 +79,44 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       );
 
-  Widget _buildSearchBar() => Container(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 8.0),
-          child: TextField(
-            controller: _searchController,
-            onChanged: (value) {
-              _fetchSuggestions(value);
-            },
-            onSubmitted: (value) {
-              Navigator.of(context).pop(value);
-            },
-            style: const TextStyle(
-              color: Colors.white,
+  Widget _buildSearchBar() => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 8.0),
+        child: TextField(
+          controller: _searchController,
+          onChanged: (value) {
+            _fetchSuggestions(value);
+          },
+          onSubmitted: (value) {
+            Navigator.of(context).pop(value);
+          },
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
+          ),
+          decoration: InputDecoration(
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+            filled: true,
+            fillColor: Colors.white.withOpacity(0.2),
+            hintText: 'Search for a location',
+            hintStyle: TextStyle(
+              color: Colors.white.withOpacity(0.7),
               fontSize: 16.0,
             ),
-            decoration: InputDecoration(
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-              filled: true,
-              fillColor: Colors.white.withOpacity(0.2),
-              hintText: 'Search for a location',
-              hintStyle: TextStyle(
-                color: Colors.white.withOpacity(0.7),
-                fontSize: 16.0,
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(28.0),
-              ),
-              prefixIcon: const Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(28.0),
+            ),
+            prefixIcon: const Icon(
+              Icons.search,
+              color: Colors.white,
             ),
           ),
         ),
       );
 
   Widget _buildListSuggestions() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Column(
         children: _suggestions.take(7).map((e) {
@@ -170,6 +169,7 @@ class _SearchScreenState extends State<SearchScreen> {
         });
       }
     } catch (e) {
+      // Do nothing
     } finally {}
   }
 }

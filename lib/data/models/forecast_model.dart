@@ -1,4 +1,4 @@
-import 'forecast_day_model.dart';
+import 'package:my_weather_app/data/models/forecast_day_model.dart';
 
 class Forecast {
   Forecast({
