@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^0.13.6
   lottie: ^2.3.2
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -94,3 +95,4 @@ flutter:
   assets:
     - assets/images/
     - assets/animations/
+    - .env
