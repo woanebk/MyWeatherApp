@@ -33,5 +33,8 @@ IP address (IPv4 and IPv6 supported) e.g: 100.0.0.1
   Today's weather forecast: Whenever users search for a place, the app will also get the predicted weather for some specific time on that day.
   Autocomplete search: The app suggests matching cities and towns based on user input.
 
+*Screenshots: <br />
+<img src="https://res.cloudinary.com/dtjiy7y6o/image/upload/v1696991878/x2fqntfwkrojb6rhc18x.png" width="500"> <br />
+<img src="https://res.cloudinary.com/dtjiy7y6o/image/upload/v1696991877/atb53ujuthrgyxxjzwvy.png" width="500">
 
-Any problem running the app ? You can reach me at namdao27082000@gmail.com
+Any problem running the app? You can reach me at namdao27082000@gmail.com
